@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">ClauseGuard logo icon</title>
+  <desc id="desc">A contract document with risk indicators, protected by a blue-purple shield with justice scales and a flowing digital orbit.</desc>
+  <defs>
+    <linearGradient id="paperFrame" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1768ff"/><stop offset=".52" stop-color="#071a54"/><stop offset="1" stop-color="#020b2b"/></linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#e7efff"/></linearGradient>
+    <linearGradient id="shieldEdge" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#00e5ff"/><stop offset=".52" stop-color="#0865ff"/><stop offset="1" stop-color="#8a20ff"/></linearGradient>
+    <linearGradient id="shieldFace" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#063b9c"/><stop offset=".55" stop-color="#06184c"/><stop offset="1" stop-color="#25106e"/></linearGradient>
+    <linearGradient id="orbit" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#00e7ff"/><stop offset=".48" stop-color="#0878ff"/><stop offset="1" stop-color="#8a20ff"/></linearGradient>
+    <linearGradient id="blueLine" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#b5d0ff"/><stop offset="1" stop-color="#7698e6"/></linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="7" stdDeviation="7" flood-color="#102b79" flood-opacity=".22"/></filter>
+  </defs>
+  <!-- Contract sheet -->
+  <g filter="url(#shadow)">
+    <path d="M113 44h204l75 75v287a28 28 0 0 1-28 28H113a28 28 0 0 1-28-28V72a28 28 0 0 1 28-28Z" fill="url(#paperFrame)"/>
+    <path d="M117 57h194l68 68v279a15 15 0 0 1-15 15H117a15 15 0 0 1-15-15V72a15 15 0 0 1 15-15Z" fill="url(#paper)"/>
+    <path d="M311 58v55a13 13 0 0 0 13 13h55" fill="none" stroke="#071a54" stroke-width="9" stroke-linejoin="round"/>
+  </g>
+  <!-- Document lines -->
+  <g fill="url(#blueLine)"><rect x="133" y="145" width="164" height="12" rx="6"/><rect x="133" y="172" width="214" height="12" rx="6"/><rect x="133" y="237" width="150" height="11" rx="5.5"/><rect x="133" y="298" width="137" height="11" rx="5.5"/><rect x="133" y="362" width="122" height="11" rx="5.5"/></g>
+  <!-- Risk rows -->
+  <g>
+    <rect x="158" y="195" width="143" height="36" rx="9" fill="#ffb5bb" opacity=".7"/><rect x="165" y="201" width="127" height="10" rx="5" fill="#f04452"/><rect x="165" y="215" width="99" height="9" rx="4.5" fill="#f56b73"/>
+    <path d="M126 197 140 222H112Z" fill="#f52232"/><path d="M126 204v8m0 4v.5" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    <rect x="158" y="256" width="143" height="36" rx="9" fill="#ffe18a" opacity=".8"/><rect x="165" y="262" width="111" height="10" rx="5" fill="#ff9d00"/><rect x="165" y="276" width="124" height="9" rx="4.5" fill="#ffb52e"/>
+    <circle cx="126" cy="274" r="14" fill="#ffad00"/><path d="M126 266v9m0 4v.5" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    <rect x="158" y="321" width="116" height="34" rx="9" fill="#a5f2d0" opacity=".85"/><rect x="165" y="327" width="99" height="9" rx="4.5" fill="#12cf8a"/><rect x="165" y="340" width="72" height="8" rx="4" fill="#43dba0"/>
+    <circle cx="126" cy="338" r="13" fill="#00a76f"/><path d="m119 338 5 5 10-11" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- Digital orbit behind shield -->
+  <path d="M70 305C15 335 36 400 112 407c95 9 204-13 300-78 50-34 70-69 43-96-18-18-47-24-75-19" fill="none" stroke="url(#orbit)" stroke-width="11" stroke-linecap="round" filter="url(#glow)"/>
+  <circle cx="54" cy="316" r="10" fill="#0878ff" stroke="#fff" stroke-width="4" filter="url(#glow)"/>
+  <circle cx="383" cy="214" r="10" fill="#7825ff" stroke="#fff" stroke-width="4" filter="url(#glow)"/>
+  <!-- Shield -->
+  <g filter="url(#shadow)">
+    <path d="M322 180 411 220v83c0 65-41 112-89 137-48-25-89-72-89-137v-83Z" fill="url(#shieldEdge)" stroke="#d6f7ff" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M322 197 394 230v72c0 53-32 92-72 115-40-23-72-62-72-115v-72Z" fill="url(#shieldFace)"/>
+  </g>
+  <!-- Scales of justice -->
+  <g fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M322 236v83M287 250h70M322 236v-8"/>
+    <circle cx="322" cy="224" r="5" fill="#fff" stroke="none"/>
+    <path d="m290 250-17 31m17-31 17 31m-48 0h62c-3 13-13 20-31 20s-28-7-31-20Zm65 0 17-31m-17 31 17 31m-31 0h62c-3 13-13 20-31 20s-28-7-31-20Z"/>
+    <path d="M303 323h38M310 317h24"/>
+  </g>
+</svg>

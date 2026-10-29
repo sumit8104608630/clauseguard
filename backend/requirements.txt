@@ -1,0 +1,21 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+alembic
+pydantic-settings
+python-multipart
+cloudinary
+python-jose[cryptography]
+passlib[bcrypt]
+chromadb
+sentence-transformers
+pypdf
+python-docx
+groq
+openai
+sse-starlette
+pytest
+httpx
+
+ pymupdf 
+  

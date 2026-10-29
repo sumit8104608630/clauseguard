@@ -1,0 +1,314 @@
+@import "tailwindcss";
+
+@theme {
+  /* Classic navy-blue accent (deep, muted, traditional) */
+  --color-brand-50: #f0f4fb;
+  --color-brand-100: #dfe7f6;
+  --color-brand-200: #c3d1ec;
+  --color-brand-300: #9db2dd;
+  --color-brand-400: #6f8bcb;
+  --color-brand-500: #4b68b8;
+  --color-brand-600: #2f4aa8;
+  --color-brand-700: #263c8a;
+  --color-brand-800: #223470;
+  --color-brand-900: #1f2d5c;
+
+  /* Neutral paper tone used for page backgrounds */
+  --color-paper: #f4f5f8;
+
+  /* Serif display face for brand + page titles */
+  --font-display: Georgia, 'Times New Roman', 'Iowan Old Style',
+    'Palatino Linotype', serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f4f5f8;
+  color: #0f172a;
+}
+
+/* Slim, unobtrusive scrollbars for panels and tables */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@layer components {
+  /* ---------- Surfaces ---------- */
+  .card {
+    @apply rounded-lg border border-slate-200 bg-white shadow-sm;
+  }
+
+  .card-flush {
+    @apply rounded-lg border border-slate-200 bg-white;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-sm {
+    @apply gap-1.5 px-2.5 py-1.5 text-xs;
+  }
+
+  .btn-xs {
+    @apply gap-1.5 px-2.5 py-1 text-[11px];
+  }
+
+  .btn-primary {
+    @apply border-brand-600 bg-brand-600 text-white hover:border-brand-700 hover:bg-brand-700;
+  }
+
+  .btn-outline {
+    @apply border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+  }
+
+  .btn-dark {
+    @apply border-slate-800 bg-slate-800 text-white hover:bg-slate-900;
+  }
+
+  .btn-ghost {
+    @apply border-transparent bg-transparent text-slate-600 hover:bg-slate-100;
+  }
+
+  .btn-danger {
+    @apply border-rose-600 bg-rose-600 text-white hover:border-rose-700 hover:bg-rose-700;
+  }
+
+  /* ---------- Forms ---------- */
+  .input {
+    @apply w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400;
+  }
+
+  .label {
+    @apply mb-1.5 block text-xs font-medium text-slate-700;
+  }
+
+  /* ---------- Text bits ---------- */
+  .overline {
+    @apply text-[11px] font-semibold tracking-wider text-slate-500 uppercase;
+  }
+
+  .page-title {
+    @apply font-display text-xl font-semibold text-slate-900 sm:text-2xl;
+  }
+
+  .card-title {
+    @apply font-display text-base font-semibold text-slate-900;
+  }
+
+  /* ---------- Pills / chips ---------- */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset;
+  }
+
+  .seg-btn {
+    @apply rounded-md px-2.5 py-1 text-xs font-medium whitespace-nowrap transition-colors;
+  }
+
+  /* ---------- Navigation ---------- */
+  .nav-item {
+    @apply flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-toast-in {
+  animation: toast-in 180ms ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 150ms ease-out;
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-drawer-in {
+  animation: drawer-in 200ms ease-out;
+}
+
+/* Markdown inside chat replies. `react-markdown` emits bare elements with no
+   classes, so these cover the tags the model actually produces. */
+.chat-markdown > *:first-child {
+  margin-top: 0;
+}
+
+.chat-markdown > *:last-child {
+  margin-bottom: 0;
+}
+
+.chat-markdown p {
+  margin: 0.5rem 0;
+}
+
+.chat-markdown strong {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.chat-markdown em {
+  font-style: italic;
+}
+
+.chat-markdown h1,
+.chat-markdown h2,
+.chat-markdown h3,
+.chat-markdown h4 {
+  margin: 0.85rem 0 0.4rem;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.3;
+}
+
+.chat-markdown h1 {
+  font-size: 1.05rem;
+}
+
+.chat-markdown h2 {
+  font-size: 1rem;
+}
+
+.chat-markdown h3,
+.chat-markdown h4 {
+  font-size: 0.9rem;
+}
+
+.chat-markdown ul,
+.chat-markdown ol {
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+}
+
+.chat-markdown ul {
+  list-style: disc;
+}
+
+.chat-markdown ol {
+  list-style: decimal;
+}
+
+.chat-markdown li {
+  margin: 0.2rem 0;
+}
+
+.chat-markdown li > ul,
+.chat-markdown li > ol {
+  margin: 0.2rem 0;
+}
+
+.chat-markdown code {
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+  background-color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8em;
+}
+
+.chat-markdown pre {
+  margin: 0.6rem 0;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background-color: #1e293b;
+  color: #e2e8f0;
+  overflow-x: auto;
+}
+
+.chat-markdown pre code {
+  padding: 0;
+  background-color: transparent;
+  color: inherit;
+  font-size: 0.8em;
+}
+
+.chat-markdown blockquote {
+  margin: 0.6rem 0;
+  padding-left: 0.75rem;
+  border-left: 3px solid #cbd5e1;
+  color: #475569;
+}
+
+.chat-markdown a {
+  color: #263c8a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.chat-markdown hr {
+  margin: 0.75rem 0;
+  border: 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.chat-markdown table {
+  width: 100%;
+  margin: 0.6rem 0;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.chat-markdown th,
+.chat-markdown td {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #cbd5e1;
+  text-align: left;
+}
+
+.chat-markdown th {
+  background-color: #e2e8f0;
+  font-weight: 600;
+}
