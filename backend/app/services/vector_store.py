@@ -20,10 +20,21 @@ def get_embedding_model():
     """Load (once) and return the sentence-transformers embedding model."""
     global _embedding_model
     if _embedding_model is None:
+        # Optimization for Render Free Tier (512MB RAM, 0.1 CPU):
+        # 1. Limit torch threads to save memory and prevent CPU thrashing.
+        # 2. Force CPU device.
+        try:
+            import torch
+            torch.set_num_threads(1)
+            torch.set_num_interop_threads(1)
+        except ImportError:
+            pass
+
         from sentence_transformers import SentenceTransformer
 
-        print("Loading embedding model...")
-        _embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+        print("Loading embedding model (optimized for low memory)...")
+        # 'all-MiniLM-L6-v2' is ~80MB, but torch overhead is high.
+        _embedding_model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
     return _embedding_model
 
 
@@ -35,7 +46,13 @@ def get_clauses_collection():
 
         # Persistent local storage: creates a 'chroma_db' folder in the
         # backend working directory.
-        _chroma_client = chromadb.PersistentClient(path="./chroma_db")
+        _chroma_client = chromadb.PersistentClient(
+            path="./chroma_db",
+            settings=chromadb.Settings(
+                anonymized_telemetry=False,
+                is_persistent=True
+            )
+        )
         # A collection is like a "table" in PostgreSQL, but for vectors.
         # Cosine similarity is standard for text.
         _clauses_collection = _chroma_client.get_or_create_collection(
@@ -60,7 +77,8 @@ def add_clauses_to_chroma(contract_id: str, clauses: list):
     texts = [clause.text for clause in clauses]
 
     # Generate embeddings (vectors) for all texts at once
-    embeddings = model.encode(texts).tolist()
+    # show_progress_bar=False saves a bit of memory/CPU overhead
+    embeddings = model.encode(texts, show_progress_bar=False).tolist()
 
     # Prepare metadata and IDs for ChromaDB
     ids = []
