@@ -2,20 +2,27 @@ fastapi
 uvicorn[standard]
 sqlalchemy
 alembic
+# Postgres driver — SQLAlchemy 2.1 resolves `postgresql://` to psycopg (v3).
+psycopg[binary]
+python-dotenv
 pydantic-settings
+# Required by pydantic's EmailStr, which the user schemas use.
+email-validator
+# security.py imports `jwt` (PyJWT), not the `jose` package.
+PyJWT
 python-multipart
 cloudinary
 python-jose[cryptography]
 passlib[bcrypt]
+bcrypt
 chromadb
 sentence-transformers
 pypdf
 python-docx
+requests
 groq
 openai
 sse-starlette
 pytest
 httpx
-
- pymupdf 
-  
+pymupdf
