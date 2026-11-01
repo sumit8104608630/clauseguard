@@ -36,10 +36,13 @@ def analyze_contract_risks(contract_id: str):
         contract_uuid = uuid.UUID(str(contract_id))
 
         contract = db.query(Contract).filter(Contract.id == contract_uuid).first()
-        if not contract:
+        if not contract or contract.status == ContractStatus.cancelled:
             return
 
         print(f"Starting risk analysis for contract {contract_uuid}...")
+        
+        db.refresh(contract)
+        if contract.status == ContractStatus.cancelled: return
 
         contract.status = ContractStatus.analyzing
         db.commit()
@@ -51,6 +54,12 @@ def analyze_contract_risks(contract_id: str):
         findings = 0
         collection = get_clauses_collection()
         for category in RISK_CATEGORIES:
+            # Check cancellation at the start of each category loop
+            db.refresh(contract)
+            if contract.status == ContractStatus.cancelled:
+                print(f"Risk analysis cancelled for contract {contract_id}")
+                return
+
             # Retrieve only this contract's chunks, closest to the category name.
             results = collection.query(
                 query_texts=[category],

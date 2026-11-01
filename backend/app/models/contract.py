@@ -11,6 +11,7 @@ class ContractStatus(str, enum.Enum):
     analyzing = "analyzing"     # LLM is reviewing risks
     analyzed = "analyzed"       # Risk analysis complete
     failed = "failed"
+    cancelled = "cancelled"
 
 
 class Contract(Base):

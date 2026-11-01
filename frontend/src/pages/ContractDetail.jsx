@@ -12,6 +12,7 @@ import {
   RefreshCw,
   ShieldAlert,
   Sparkles,
+  XCircle,
 } from 'lucide-react'
 import { api } from '../lib/api'
 import { useAuth } from '../context/AuthContext'
@@ -45,6 +46,7 @@ export default function ContractDetail() {
   const [analysisLoading, setAnalysisLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [starting, setStarting] = useState(false)
+  const [cancelling, setCancelling] = useState(false)
   const [analysisStarting, setAnalysisStarting] = useState(false)
   const [tab, setTab] = useState('overview')
 
@@ -176,6 +178,20 @@ export default function ContractDetail() {
     }
   }
 
+  async function handleCancel() {
+    if (!window.confirm('Stop the current background process?')) return
+    setCancelling(true)
+    try {
+      await api.cancelProcessing(contractId)
+      toast.success('Cancellation request sent.')
+      await loadContract({ silent: true })
+    } catch (error) {
+      toast.error(error.message || 'Could not cancel the process')
+    } finally {
+      setCancelling(false)
+    }
+  }
+
   async function handleRunAnalysis() {
     setAnalysisStarting(true)
     try {
@@ -301,6 +317,22 @@ export default function ContractDetail() {
                 : 'Process contract'}
           </button>
 
+          {isProcessing && (
+            <button
+              type="button"
+              onClick={handleCancel}
+              disabled={cancelling}
+              className="btn btn-outline btn-sm border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 grow justify-center sm:grow-0"
+            >
+              {cancelling ? (
+                <Spinner size="sm" className="h-3.5! w-3.5!" />
+              ) : (
+                <XCircle className="h-3.5 w-3.5" />
+              )}
+              Stop
+            </button>
+          )}
+
           <button
             type="button"
             onClick={handleRunAnalysis}
@@ -323,12 +355,27 @@ export default function ContractDetail() {
       </div>
 
       {isProcessing ? (
-        <div className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5">
-          <RefreshCw className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-amber-600" />
-          <p className="text-xs text-amber-800">
-            Extraction, indexing or the risk review is running in the
-            background. This page refreshes automatically.
-          </p>
+        <div className="flex flex-col gap-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-2">
+            <RefreshCw className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-amber-600" />
+            <p className="text-xs text-amber-800">
+              Extraction, indexing or the risk review is running in the
+              background. This page refreshes automatically.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleCancel}
+            disabled={cancelling}
+            className="btn btn-sm border-amber-300 bg-white text-xs text-amber-700 hover:bg-amber-100 shrink-0 self-start sm:self-auto"
+          >
+            {cancelling ? (
+              <Spinner size="sm" className="h-3! w-3!" />
+            ) : (
+              <XCircle className="h-3 w-3" />
+            )}
+            Stop process
+          </button>
         </div>
       ) : null}
 

@@ -88,28 +88,37 @@ def process_contract_ingestion(contract_id: str):
     try:
         # 1. Fetch the contract from DB
         contract = db.query(Contract).filter(Contract.id == contract_id).first()
-        if not contract:
+        if not contract or contract.status == ContractStatus.cancelled:
             return
 
         # 2. Download and extract text
         pdf_bytes = download_pdf_from_url(contract.cloudinary_url)
+        
+        db.refresh(contract)
+        if contract.status == ContractStatus.cancelled: return
+        
         raw_text = extract_text_from_pdf(pdf_bytes)
 
         # 3. Split into chunks
         text_chunks = chunk_text(raw_text)
 
         # 4. Save chunks to PostgreSQL.
-        # Re-processing must replace the previous run, otherwise the old clauses
-        # stay behind and duplicate every vector in ChromaDB.
+        db.refresh(contract)
+        if contract.status == ContractStatus.cancelled: return
+
         db.query(Clause).filter(Clause.contract_id == contract.id).delete()
         db.commit()
         delete_contract_clauses(contract.id)
 
         saved_clauses = []
         for index, chunk_data in enumerate(text_chunks):
-            # chroma_id is NOT NULL, so it must be filled in at INSERT time.
-            # ChromaDB uses str(clause.id) as its id, so generate the UUID here
-            # and mirror it into chroma_id to keep both stores linked.
+            # Check cancellation inside the loop for responsiveness
+            if index % 5 == 0: # Check every 5 chunks
+                db.refresh(contract)
+                if contract.status == ContractStatus.cancelled:
+                    print(f"Ingestion cancelled for contract {contract_id}")
+                    return
+
             clause_id = uuid.uuid4()
             new_clause = Clause(
                 id=clause_id,

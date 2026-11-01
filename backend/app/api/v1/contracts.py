@@ -111,6 +111,33 @@ def process_contract(
     background_tasks.add_task(process_contract_ingestion, str(contract.id))
 
     return {"message": "Contract processing started in the background."}
+    
+
+@router.post("/{contract_id}/cancel", status_code=status.HTTP_200_OK)
+def cancel_contract_processing(
+    contract_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Manually stop any running background task for this contract."""
+    contract = db.query(Contract).filter(
+        Contract.id == contract_id,
+        Contract.user_id == current_user.id
+    ).first()
+
+    if not contract:
+        raise HTTPException(status_code=404, detail="Contract not found")
+
+    if contract.status not in [ContractStatus.processing, ContractStatus.analyzing]:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Cannot cancel contract in '{contract.status}' status"
+        )
+
+    contract.status = ContractStatus.cancelled
+    db.commit()
+
+    return {"message": "Cancellation request received. The process will stop shortly."}
 
 from app.schemas.clause import ClauseRead
 

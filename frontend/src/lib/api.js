@@ -125,6 +125,9 @@ export const api = {
   processContract: (contractId) =>
     request(`/contracts/${contractId}/process`, { method: 'POST' }),
 
+  cancelProcessing: (contractId) =>
+    request(`/contracts/${contractId}/cancel`, { method: 'POST' }),
+
   getClauses: (contractId) => request(`/contracts/${contractId}/clauses`),
 
   // ---- analysis --------------------------------------------------------
