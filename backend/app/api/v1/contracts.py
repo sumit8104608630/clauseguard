@@ -120,8 +120,14 @@ def cancel_contract_processing(
     current_user: User = Depends(get_current_user)
 ):
     """Manually stop any running background task for this contract."""
+    import uuid
+    try:
+        contract_uuid = uuid.UUID(str(contract_id))
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid contract ID format")
+
     contract = db.query(Contract).filter(
-        Contract.id == contract_id,
+        Contract.id == contract_uuid,
         Contract.user_id == current_user.id
     ).first()
 
