@@ -15,6 +15,20 @@ class Settings(BaseSettings):
     # this overridable from .env instead of hard-coding it at the call site.
     GROQ_MODEL: str = "openai/gpt-oss-120b"
 
+    # --- external email/OTP microservice -------------------------------------
+    OTP_SERVICE_URL: str = "https://otp-microservise.vercel.app"
+    EMAIL_FROM: str | None = None
+
+    # --- Google OAuth --------------------------------------------------------
+    # Client id of the "web" OAuth client; the frontend uses the same value to
+    # obtain the access token, we only need it to tag/lookup google accounts.
+    GOOGLE_CLIENT_ID: str = ""
+    GOOGLE_CLIENT_SECRET: str = ""
+    GOOGLE_REDIRECT_URI: str = "http://localhost:8000"
+
+    # Public origin of the React app (used for links inside notification mail).
+    FRONTEND_URL: str = "http://localhost:5173"
+
     model_config = SettingsConfigDict(
         env_file=BASE_DIR / ".env",
         extra="ignore",

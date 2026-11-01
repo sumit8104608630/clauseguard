@@ -45,7 +45,18 @@ export function AuthProvider({ children }) {
     return data
   }
 
-  const register = async (payload) => api.register(payload)
+  /** Registration is OTP-gated, so the backend already signs the user in. */
+  const register = async (payload) => {
+    const data = await api.register(payload)
+    persist(data?.user ?? { email: payload.email })
+    return data
+  }
+
+  const loginWithGoogle = async (accessToken) => {
+    const data = await api.loginWithGoogle(accessToken)
+    persist(data?.user ?? null)
+    return data
+  }
 
   const logout = async () => {
     try {
@@ -61,6 +72,7 @@ export function AuthProvider({ children }) {
     isAuthenticated: !!user,
     login,
     register,
+    loginWithGoogle,
     logout,
   }
 

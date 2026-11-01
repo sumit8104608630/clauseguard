@@ -24,8 +24,10 @@ RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTr
 # Copy the rest of the application
 COPY . .
 
-# Expose the port uvicorn runs on
+# Expose the port uvicorn runs on (local docker-compose).
 EXPOSE 8000
 
-# Start the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Render injects PORT (default 10000) and has no shell on free instances, so
+# migrations run here on every boot and uvicorn binds to whatever port Render
+# asks for (falling back to 8000 for local docker-compose).
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

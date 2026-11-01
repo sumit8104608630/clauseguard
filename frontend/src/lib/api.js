@@ -90,11 +90,23 @@ async function request(path, { method = 'GET', body, signal } = {}) {
 
 export const api = {
   // ---- auth ------------------------------------------------------------
+  sendRegistrationOtp: (email) =>
+    request('/user/send-otp', { method: 'POST', body: { email } }),
+
   register: (payload) =>
     request('/user/register', { method: 'POST', body: payload }),
 
   login: (email, password) =>
     request('/user/login', { method: 'POST', body: { email, password } }),
+
+  loginWithGoogle: (accessToken) =>
+    request('/user/google', { method: 'POST', body: { access_token: accessToken } }),
+
+  forgotPassword: (email) =>
+    request('/user/forgot-password', { method: 'POST', body: { email } }),
+
+  resetPassword: (payload) =>
+    request('/user/reset-password', { method: 'POST', body: payload }),
 
   logout: () => request('/user/logout', { method: 'POST' }),
 

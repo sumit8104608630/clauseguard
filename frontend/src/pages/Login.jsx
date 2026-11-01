@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { AlertCircle, Eye, EyeOff } from 'lucide-react'
 import AuthShell from '../components/AuthShell'
+import GoogleSignInButton from '../components/GoogleSignInButton'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 
 export default function Login() {
-  const { login } = useAuth()
+  const { login, loginWithGoogle } = useAuth()
   const toast = useToast()
   const navigate = useNavigate()
   const location = useLocation()
@@ -16,8 +17,15 @@ export default function Login() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
+  const redirectTo = location.state?.from || '/'
+
   function update(field, value) {
     setForm((current) => ({ ...current, [field]: value }))
+  }
+
+  function reportError(message) {
+    setError(message)
+    toast.error(message)
   }
 
   async function handleSubmit(event) {
@@ -33,14 +41,19 @@ export default function Login() {
     try {
       await login(form.email, form.password)
       toast.success('Welcome back!')
-      navigate(location.state?.from || '/', { replace: true })
+      navigate(redirectTo, { replace: true })
     } catch (requestError) {
-      const message = requestError.message || 'Unable to sign in.'
-      setError(message)
-      toast.error(message)
+      reportError(requestError.message || 'Unable to sign in.')
     } finally {
       setSubmitting(false)
     }
+  }
+
+  async function handleGoogleToken(accessToken) {
+    setError('')
+    await loginWithGoogle(accessToken)
+    toast.success('Welcome back!')
+    navigate(redirectTo, { replace: true })
   }
 
   return (
@@ -56,6 +69,24 @@ export default function Login() {
         </p>
       }
     >
+      <GoogleSignInButton
+        onToken={handleGoogleToken}
+        onError={(requestError) =>
+          reportError(requestError?.message || 'Unable to sign in with Google.')
+        }
+      />
+
+      <div className="relative my-5">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-slate-200" />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="bg-white px-2 text-[11px] tracking-wider text-slate-400 uppercase">
+            or
+          </span>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         {error ? (
           <div className="flex items-start gap-2 rounded-md border border-rose-200 bg-rose-50 px-3 py-2">
@@ -80,9 +111,17 @@ export default function Login() {
         </div>
 
         <div>
-          <label htmlFor="password" className="label">
-            Password
-          </label>
+          <div className="flex items-center justify-between">
+            <label htmlFor="password" className="label">
+              Password
+            </label>
+            <Link
+              to="/forgot-password"
+              className="mb-1.5 text-[11px] font-medium text-brand-600 hover:text-brand-700"
+            >
+              Forgot password?
+            </Link>
+          </div>
           <div className="relative">
             <input
               id="password"
