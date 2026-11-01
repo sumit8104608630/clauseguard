@@ -11,7 +11,7 @@ from app.models.analysis import RiskResult
 from app.models.contract import Contract, ContractStatus
 from app.schemas.analysis import RiskResultLLM
 from app.services.llm_client import get_llm_risk_analysis
-from app.services.vector_store import clauses_collection
+from app.services.vector_store import get_clauses_collection
 
 RISK_CATEGORIES = [
     "Indemnification",
@@ -49,9 +49,10 @@ def analyze_contract_risks(contract_id: str):
         db.commit()
 
         findings = 0
+        collection = get_clauses_collection()
         for category in RISK_CATEGORIES:
             # Retrieve only this contract's chunks, closest to the category name.
-            results = clauses_collection.query(
+            results = collection.query(
                 query_texts=[category],
                 n_results=3,
                 where={"contract_id": str(contract_uuid)},

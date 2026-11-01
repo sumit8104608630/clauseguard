@@ -2,7 +2,7 @@
 # app/services/chat.py
 import uuid
 
-from app.services.vector_store import clauses_collection
+from app.services.vector_store import get_clauses_collection
 
 # How many chunks we hand to the LLM as grounding context.
 TOP_K = 5
@@ -19,14 +19,16 @@ def retrieve_context(contract_id: str, question: str) -> tuple[str, list[uuid.UU
     """
     contract_id = str(contract_id)
 
+    collection = get_clauses_collection()
+
     # Chroma raises if n_results exceeds the number of matching vectors, so
     # ask for however many this contract actually has.
-    existing = clauses_collection.get(where={"contract_id": contract_id}, include=[])
+    existing = collection.get(where={"contract_id": contract_id}, include=[])
     available = len(existing["ids"])
     if available == 0:
         return "", []
 
-    results = clauses_collection.query(
+    results = collection.query(
         query_texts=[question],
         n_results=min(TOP_K, available),
         where={"contract_id": contract_id},
